@@ -1,0 +1,28 @@
+services:
+  fastapi:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_container
+    ports:
+      - "8000:8000"
+    image: fastapi_app
+    environment:
+      - DATABASE_URL=postgresql://postgres:test123@db:5432/mydatabase
+    volumes:
+      - ./:/app
+  
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:      
