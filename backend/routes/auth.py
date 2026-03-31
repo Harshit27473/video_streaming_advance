@@ -4,7 +4,7 @@ from db.db import get_db
 from helper.auth_helper import get_secret_hash
 from secret_keys import SecretKeys
 from pydantic_models.auth_models import LoginRequest, SignupRequest, confirmSignupRequest
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 import boto3
 from sqlalchemy.orm import Session
 
@@ -63,6 +63,7 @@ def signup_user(
 @router.post("/login")
 def login_user(
     data: LoginRequest, 
+    response: Response,
     ):
     try:
         secret_hash = get_secret_hash(data.email, COGNITO_CLIENT_ID, COGNITO_SECRET_KEY)
@@ -77,6 +78,27 @@ def login_user(
                    "SECRET_HASH": secret_hash
                },       
         )
+        auth_result = cognito_response.get("AuthenticationResult")
+        if not auth_result:
+            raise HTTPException(400, 'cognito did not return authentication result')
+
+        access_token = auth_result.get("AccessToken")
+        refresh_token = auth_result.get("RefreshToken")
+
+        response.set_cookie(
+            key="access_token", 
+            value=access_token, 
+            httponly=True, 
+            secure= True
+            )
+        
+        response.set_cookie(
+            key="refresh_token", 
+            value=refresh_token, 
+            httponly=True, 
+            secure= True
+            )
+        
         return {"message": "user confirmed successfully"}
     except Exception as e:
         raise HTTPException(400, f'cognito login exception {e}')
