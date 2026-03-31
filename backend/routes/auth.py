@@ -3,7 +3,7 @@ from db.models.user import User
 from db.db import get_db
 from helper.auth_helper import get_secret_hash
 from secret_keys import SecretKeys
-from pydantic_models.auth_models import SignupRequest
+from pydantic_models.auth_models import LoginRequest, SignupRequest, confirmSignupRequest
 from fastapi import APIRouter, Depends, HTTPException
 import boto3
 from sqlalchemy.orm import Session
@@ -55,6 +55,45 @@ def signup_user(
         db.commit()
         db.refresh(new_user)
 
-        return {"msg": "signup successful. please confirm your email if required"}
+        return {"message": "signup successful. please confirm your email if required"}
     except Exception as e:
         raise HTTPException(400, f'cognito signup exception {e}')
+    
+
+@router.post("/login")
+def login_user(
+    data: LoginRequest, 
+    ):
+    try:
+        secret_hash = get_secret_hash(data.email, COGNITO_CLIENT_ID, COGNITO_SECRET_KEY)
+
+        cognito_response =cognito_client.initiate_auth(
+            ClientId=COGNITO_CLIENT_ID,
+            AuthFlow="USER_PASSWORD_AUTH",
+            AuthParameters=
+               {
+                   "USERNAME": data.email,
+                   "PASSWORD": data.password,
+                   "SECRET_HASH": secret_hash
+               },       
+        )
+        return {"message": "user confirmed successfully"}
+    except Exception as e:
+        raise HTTPException(400, f'cognito login exception {e}')
+    
+@router.post("/confirm-signup")
+def confirm_signup(
+    data: confirmSignupRequest,  
+    ):
+    try:
+        secret_hash = get_secret_hash(data.email, COGNITO_CLIENT_ID, COGNITO_SECRET_KEY)
+
+        cognito_response =cognito_client.confirm_sign_up(
+            ClientId=COGNITO_CLIENT_ID,
+            username=data.email,
+            ConfirmationCode=data.otp,
+            SecretHash=secret_hash,   
+        )
+        return {"message": "user confirmed successfully"}
+    except Exception as e:
+        raise HTTPException(400, f'cognito login exception {e}')
