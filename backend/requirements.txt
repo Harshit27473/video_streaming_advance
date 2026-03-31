@@ -3,3 +3,5 @@ uvicorn
 boto3
 pydantic-settings
 python-dotenv
+sqlalchemy
+psycopg2-binary
