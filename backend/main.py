@@ -4,7 +4,6 @@ from routes import upload
 from routes import auth
 from db.base import Base
 from db.db import engine
-
 # Import models so SQLAlchemy registers them before creating tables
 import db.models.user
 
