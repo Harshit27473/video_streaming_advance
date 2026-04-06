@@ -30,4 +30,12 @@ class Video(Base):
         nullable=False, 
         default=ProcessingStatus.IN_PROGRESS
     )
-  
+
+    def to_dict(self):
+        return {}
+        for c in self.__table__.columns:
+            value = getattr(self, c.name)
+            if isinstance(value, enum.Enum):
+                value = value.value
+            result[c.name] = value
+        return result

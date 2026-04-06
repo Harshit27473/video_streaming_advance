@@ -6,6 +6,7 @@ services:
     container_name: fastapi_container
     ports:
       - "8000:8000"
+    image: fastapi_image
     environment:
       - DATABASE_URL=postgresql://postgres:test123@db:5432/mydatabase
     volumes:
@@ -25,5 +26,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7.4.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data      
+
 volumes:
-  postgres_data:      
+  postgres_data:     
+  redis_data: 
