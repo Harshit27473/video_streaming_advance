@@ -30,4 +30,27 @@ def get_presigned_url(user=Depends(get_current_user)):
         }
     except Exception as e:
         raise HTTPException(500, str(e))
-             
+
+
+@router.get("/url/thumbnail")
+def get_presigned_url_thumbnail(user=Depends(get_current_user)):
+    try:
+        thumbnail_id = f"{user['sub']}/{uuid.uuid4()}"
+        response = s3_client.generate_presigned_url(
+            "put_object",
+            Params={
+                "Bucket": secret_keys.AWS_VIDEOS_THUMBNAILS_BUCKET,
+                "Key": thumbnail_id,
+                "ContentType": "image/*",
+            },
+         
+        ) 
+
+        return{
+            "url": response,
+            "thumbnail_id": thumbnail_id,
+
+        }
+    except Exception as e:
+        raise HTTPException(500, str(e))           
+
