@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+from fastapi import requests
 from  secret_keys import SecretKeys
 import boto3
 import subprocess
@@ -203,7 +203,8 @@ class VideoTranscoder:
         try:
             self.download_video(input_path)
             self.transcode_video(str(input_path), str(output_path))
-            self.upload_files(secret_keys.S3_KEY, str(output_path) )
+            self.upload_files(secret_keys.S3_KEY, str(output_path))
+            self.update_video()
         finally:
             if input_path.exists():
                 input_path.unlink()
@@ -212,4 +213,15 @@ class VideoTranscoder:
 
                 shutil.rmtree(output_path)
 
-VideoTranscoder().process_video()
+    def update_video(self):
+        try:  
+
+            response = requests.put(f"{secret_keys.BACKEND_URL}/videos?id={secret_keys.S3_KEY}")
+            print(response.json())
+            return response.json()    
+
+        except Exception as e:    
+            print(e)
+
+VideoTranscoder().process_video()    
+        

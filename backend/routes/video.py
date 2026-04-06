@@ -1,6 +1,6 @@
 import json
 from operator import or_
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.models.video import ProcessingStatus, Video, VisibilityStatus
 from db.middleware.auth_middleware import get_current_user
@@ -51,4 +51,18 @@ def get_video_info (
     )
     print(video.to_dict())
     redis_client.setex(cache_key, 3600, json.dumps(video.to_dict()))
+    return video
+
+@router.put("/")
+def update_video_by_id(id: str, db: Session = Depends(get_db)):
+    video = db.query(Video).filter(Video.id == id).first()
+
+    if not video:
+        raise HTTPException(404,"Video not found")
+    
+    video.is_processing = ProcessingStatus.COMPLETED
+    db.commit()
+    db.refresh(video)
+
+
     return video
