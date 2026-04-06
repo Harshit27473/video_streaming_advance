@@ -1,8 +1,12 @@
 import boto3
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
+from db.models.video import Video
+from pydantic_models.upload_models import UploadMetadata
+from db.db import get_db
 from db.middleware.auth_middleware import get_current_user
 from secret_keys import SecretKeys
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 secret_keys = SecretKeys()
@@ -54,3 +58,23 @@ def get_presigned_url_thumbnail(user=Depends(get_current_user)):
     except Exception as e:
         raise HTTPException(500, str(e))           
 
+@router.post("/metadata")
+def upload_metadata(
+    metadata: UploadMetadata,
+    user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    new_video = Video(
+        id=metadata.video_id,
+        title=metadata.title,
+        description=metadata.description,
+        video_s3_key=metadata.video_s3_key,
+        visibility=metadata.visibility,
+        user_id=user["sub"],
+    )
+    
+    db.add(new_video)
+    db.commit()
+    db.refresh(new_video)
+
+    return new_video

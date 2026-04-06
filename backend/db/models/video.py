@@ -18,15 +18,15 @@ class Video(Base):
     id = Column(TEXT, primary_key=True)
     title = Column(TEXT)
     description = Column(TEXT)
-    User_id = Column(TEXT, ForeignKey("users.id"))
+    user_id = Column(TEXT, ForeignKey("users.cognito_sub"))
     video_s3_key = Column(TEXT)
     visibility = Column(
-        Enum(VisibilityStatus),
+        Enum(VisibilityStatus, native_enum=False),
         nullable=False, 
         default=VisibilityStatus.PRIVATE
     )
     is_processing = Column(
-        Enum(ProcessingStatus), 
+        Enum(ProcessingStatus, native_enum=False), 
         nullable=False, 
         default=ProcessingStatus.IN_PROGRESS
     )

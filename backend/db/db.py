@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 secret_keys = SecretKeys()
 
-engine =create_engine(secret_keys.POSTGRES_DB_URL)
+engine =create_engine(secret_keys.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
