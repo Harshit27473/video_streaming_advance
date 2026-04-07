@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_client/pages/auth/login_page.dart';
+import 'package:flutter_client/pages/auth/signup_page.dart';
 
-class SignupPage extends StatefulWidget {
-  static route() => MaterialPageRoute(builder: (context)=> SignupPage());
-  const SignupPage({super.key});
+class LoginPage extends StatefulWidget {
+  static route() => MaterialPageRoute(builder: (context)=> LoginPage());
+  const LoginPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,18 +18,13 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Text('Sign-up', style: TextStyle(
+                 Text('Sign In.', style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.bold,
                   ),
                   ),
                  const SizedBox(height:30),
-                 TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                  ),
-                 ), 
-                 const SizedBox(height:15),
+                 
                  TextFormField(
                   decoration: InputDecoration(
                     hintText: 'Email',
@@ -53,14 +48,14 @@ class _SignupPageState extends State<SignupPage> {
                   const SizedBox(height:20),
                     GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(LoginPage.route());
+                      Navigator.of(context).push(SignupPage.route());
                     },
                     child: RichText(text: TextSpan(
-                      text: 'Already have an account?',
+                      text: 'Don\'t have an account?',
                       style: Theme.of(context).textTheme.titleMedium,
                       children: [
                           TextSpan(
-                            text: 'Sign In',
+                            text: 'Sign Up',
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.green),
                             ),
                       ],
