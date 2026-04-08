@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_client/pages/auth/login_page.dart';
 import 'package:flutter_client/pages/auth/signup_page.dart';
 
 void main() {
@@ -40,7 +39,21 @@ class MyApp extends StatelessWidget {
               width: 2,
             ),
             borderRadius: BorderRadius.circular(30),
-        )
+        ),
+           errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(30),
+           ),
+           border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey.shade300,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(40),
+          ),
       ),
       ),
       home: const SignupPage(),
