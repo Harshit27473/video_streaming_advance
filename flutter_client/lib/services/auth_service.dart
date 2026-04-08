@@ -23,7 +23,6 @@ class AuthService{
           print(res.body);
           throw jsonDecode(res.body)['detail'] ?? 'an error occured';
         }
-
         return jsonDecode(res.body)['message'] ?? 'sign up successful, please verify your email ';
     }
 }
