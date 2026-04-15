@@ -14,7 +14,7 @@ class ConfirmSignupPage extends StatefulWidget {
 
 class _ConfirmSignupPageState extends State<ConfirmSignupPage> {
   final otpController = TextEditingController();
-  final emailController = TextEditingController();
+  late TextEditingController emailController ;
   final formKey = GlobalKey<FormState>();
   final AuthService authService = AuthService();
 
@@ -22,7 +22,7 @@ class _ConfirmSignupPageState extends State<ConfirmSignupPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    emailController.text = TextEditingController(text: email);
+    emailController = TextEditingController(text: widget.email);
   }
 
 @override
@@ -58,25 +58,13 @@ void signup() async {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Text('Sign-up', style: TextStyle(
+                   Text('Confirm-Sign-up', style: TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
                     ),
                     ),
                    const SizedBox(height:30),
-                   TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      hintText: 'Name',
-                    ),
-                    validator: (value) {
-                      if(value!.trim().isEmpty){
-                        return 'Field cannot be empty';
-                      }
-                      return null; 
-                    },
-                   ), 
-                   const SizedBox(height:15),
+                   
                    TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(
@@ -91,12 +79,12 @@ void signup() async {
                    ), 
                    const SizedBox(height:15),
                    TextFormField( 
-                    controller: passwordController,
+                    controller: otpController,
                     obscureText: true,
                     enableSuggestions: false,
                     autocorrect: false,
                     decoration: InputDecoration(
-                      hintText: 'Password',
+                      hintText: 'OTP',
                     ),
                     validator: (value) {
                       if(value!.trim().isEmpty){
@@ -114,24 +102,7 @@ void signup() async {
                         ),
                       ),           
                     ),
-                    const SizedBox(height:20),
-                      GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(LoginPage.route());
-                      },
-                      child: RichText(text: TextSpan(
-                        text: 'Already have an account?',
-                        style: Theme.of(context).textTheme.titleMedium,
-                        children: [
-                            TextSpan(
-                              text: 'Sign In',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.green),
-                              ),
-                        ],
-                      ),
-                                       
-                      ),
-                    ),
+                     
                 ],
               ),
             ),
